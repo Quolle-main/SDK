@@ -1,0 +1,25 @@
+{
+  "name": "quolle",
+  "version": "0.1.0",
+  "description": "Official Node.js SDK for Quolle",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "email",
+    "transactional",
+    "nigeria",
+    "africa",
+    "sdk"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
