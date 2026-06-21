@@ -4,7 +4,7 @@ import type { SendEmailPayload, USSDEmailPayload, Email } from "./types";
 export class EmailsResource {
   constructor(private readonly client: Quolle) {}
 
-  async send(payload: SendEmailPayload): Promise<{ id: string; message: string; status?: string; scheduledAt?: string }> {
+  async send(payload: SendEmailPayload): Promise<{ id: string }> {
     return this.client.request("POST", "/v1/emails/send", payload);
   }
 

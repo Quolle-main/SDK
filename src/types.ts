@@ -1,6 +1,7 @@
 export interface QuolleConfig {
   apiKey: string;
   baseURL?: string;
+  timeout?: number;
 }
 
 export interface SendEmailPayload {
@@ -8,11 +9,15 @@ export interface SendEmailPayload {
   to: string | string[];
   subject: string;
   html: string;
-  replyTo?: string;
   text?: string;
+  replyTo?: string;
   scheduledAt?: string;
-  metadata?: {
-    ussd?: {
+  metadata?: Record<string, unknown>;
+}
+
+export interface USSDEmailPayload extends SendEmailPayload {
+  metadata: {
+    ussd: {
       sessionId: string;
       shortCode: string;
       phoneNumber: string;
@@ -22,23 +27,19 @@ export interface SendEmailPayload {
   };
 }
 
-export interface USSDEmailPayload extends Omit<SendEmailPayload, "to"> {
-  to?: string;
-  phoneNumber?: string;
-}
-
 export interface Email {
   id: string;
   from: string;
   to: string;
   subject: string;
-  status: string;
+  status: "queued" | "sending" | "sent" | "delivered" | "bounced" | "failed";
+  provider?: string;
+  messageId?: string;
   opensCount: number;
   clicksCount: number;
-  openedAt: string | null;
-  clickedAt: string | null;
-  sentAt: string | null;
-  scheduledAt: string | null;
+  openedAt?: string;
+  clickedAt?: string;
+  sentAt?: string;
   createdAt: string;
 }
 
@@ -46,7 +47,16 @@ export interface Domain {
   id: string;
   domain: string;
   status: "pending" | "verified" | "failed";
+  dnsProvider?: string;
   createdAt: string;
+}
+
+export interface DNSRecord {
+  type: string;
+  name: string;
+  value: string;
+  ttl: number;
+  purpose: string;
 }
 
 export interface Contact {
@@ -76,10 +86,12 @@ export interface WebhookEvent {
 }
 
 export class QuolleError extends Error {
-  statusCode: number;
-  constructor(message: string, statusCode: number) {
+  constructor(
+    message: string,
+    public statusCode: number,
+    public data?: Record<string, unknown>
+  ) {
     super(message);
     this.name = "QuolleError";
-    this.statusCode = statusCode;
   }
 }

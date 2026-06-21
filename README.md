@@ -1,112 +1,137 @@
-# quolle
+# Quolle
 
-Official Node.js / TypeScript SDK for [Quolle](https://quolle.com) — transactional email built for African SaaS.
+Official Node.js SDK for [Quolle](https://quolle.com) — transactional email API for African SaaS.
 
 ## Installation
 
 ```bash
-npm install quolle
+npm install @quolle/sdk
 ```
 
-## Quick start
+## Quick Start
 
 ```typescript
-import { Quolle } from "quolle";
+import { Quolle } from "@quolle/sdk"
 
-const client = new Quolle({ apiKey: process.env.QUOLLE_API_KEY! });
+const quolle = new Quolle({
+  apiKey: process.env.QUOLLE_API_KEY!
+})
 
-const email = await client.emails.send({
+// Send an email
+const { id } = await quolle.emails.send({
   from: "hello@mail.yourdomain.com",
   to: "customer@example.com",
   subject: "Welcome!",
-  html: "<h1>Thanks for signing up</h1>",
-});
-
-console.log(email.id); // "a1b2c3d4-…"
+  html: "<h1>Welcome to our platform</h1>"
+})
 ```
+
+## Features
+
+- ✅ TypeScript-first with full type safety
+- ✅ Send via REST API
+- ✅ USSD-triggered emails
+- ✅ Idempotency key support
+- ✅ Domain management
+- ✅ Naira pricing at quolle.com
 
 ## Idempotency
 
 ```typescript
-client.emails.setIdempotencyKey("order_12345");
-const email = await client.emails.send({ … });
-// Calling again with the same key returns the cached response
+const { id } = await quolle.emails
+  .setIdempotencyKey("order_123_receipt")
+  .send({
+    from: "hello@mail.yourdomain.com",
+    to: "customer@example.com",
+    subject: "Your receipt",
+    html: "<p>Thanks for your order</p>"
+  })
 ```
 
-## Scheduled sending
+## Scheduled Sending
 
 ```typescript
-await client.emails.send({
-  from: "…",
-  to: "…",
+await quolle.emails.send({
+  from: "hello@mail.yourdomain.com",
+  to: "customer@example.com",
   subject: "Your weekly digest",
-  html: "…",
-  scheduledAt: "2026-12-25T09:00:00.000Z",
-});
+  html: "<p>Here's what happened this week</p>",
+  scheduledAt: "2026-12-25T09:00:00.000Z"
+})
 ```
 
-## Batch sending
+## Batch Sending
 
 ```typescript
-const { ids, queued } = await client.emails.sendBatch([
-  { from: "…", to: "alice@example.com", subject: "Hi Alice", html: "…" },
-  { from: "…", to: "bob@example.com",   subject: "Hi Bob",   html: "…" },
-]);
+const { ids, queued } = await quolle.emails.sendBatch([
+  { from: "hello@mail.yourdomain.com", to: "alice@example.com", subject: "Hi Alice", html: "<p>Hello</p>" },
+  { from: "hello@mail.yourdomain.com", to: "bob@example.com",   subject: "Hi Bob",   html: "<p>Hello</p>" }
+])
 ```
 
-## USSD-triggered emails
+## USSD Emails
 
 ```typescript
-const result = await client.emails.sendUSSD({
+await quolle.emails.sendUSSD({
   from: "receipts@mail.yourbank.com",
-  phoneNumber: "+2348012345678",
+  to: "customer@example.com",
   subject: "Transaction Receipt",
-  html: "<p>₦5,000 sent.</p>",
+  html: "<p>₦5,000 sent successfully</p>",
   metadata: {
-    ussd: { sessionId: "sess_abc", shortCode: "*737#", phoneNumber: "+2348012345678" },
-  },
-});
-// { queued: true, ref: "…" }
+    ussd: {
+      sessionId: "sess_123",
+      shortCode: "*737#",
+      phoneNumber: "+2348012345678"
+    }
+  }
+})
 ```
 
 ## Domains
 
 ```typescript
-const domains = await client.domains.list();
-const d = await client.domains.add("mail.yourdomain.com");
-await client.domains.verify(d.id);
+const domains = await quolle.domains.list()
+
+const { domain, dnsRecords } = await quolle.domains.add("mail.yourdomain.com")
+
+const { verified, status } = await quolle.domains.verify(domain.id)
 ```
 
-## Contact lists
+## Contact Lists
 
 ```typescript
-const list = await client.contacts.createList("Newsletter");
-await client.contacts.add(list.id, {
+const list = await quolle.contacts.createList("Newsletter")
+await quolle.contacts.add(list.id, {
   email: "user@example.com",
   firstName: "Amaka",
-  phone: "+2348012345678",
-});
-const contacts = await client.contacts.list(list.id);
+  phone: "+2348012345678"
+})
+const contacts = await quolle.contacts.list(list.id)
 ```
 
-## Error handling
+## Error Handling
 
 ```typescript
-import { QuolleError } from "quolle";
+import { Quolle, QuolleError } from "@quolle/sdk"
 
 try {
-  await client.emails.send({ … });
+  await quolle.emails.send({
+    from: "hello@mail.yourdomain.com",
+    to: "customer@example.com",
+    subject: "Welcome!",
+    html: "<h1>Welcome</h1>"
+  })
 } catch (err) {
   if (err instanceof QuolleError) {
-    console.error(err.status, err.message);
+    console.error(err.statusCode, err.message)
   }
 }
 ```
 
-## API reference
+## API Reference
 
-See the full [API documentation](https://docs.quolle.com).
+Full documentation at https://docs.quolle.com
 
 ## License
 
-MIT
+MIT © Avianise

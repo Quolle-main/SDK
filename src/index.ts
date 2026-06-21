@@ -1,7 +1,4 @@
 export { Quolle } from "./client";
-export { EmailsResource } from "./emails";
-export { DomainsResource } from "./domains";
-export { ContactsResource } from "./contacts";
 export { QuolleError } from "./types";
 export type {
   QuolleConfig,
@@ -9,6 +6,7 @@ export type {
   USSDEmailPayload,
   Email,
   Domain,
+  DNSRecord,
   Contact,
   ContactList,
   WebhookEvent,

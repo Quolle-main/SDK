@@ -1,24 +1,38 @@
 {
-  "name": "quolle",
+  "name": "@quolle/sdk",
   "version": "0.1.0",
-  "description": "Official Node.js SDK for Quolle",
+  "description": "Official Node.js SDK for Quolle — transactional email API for African SaaS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "node dist/test.js"
   },
   "keywords": [
     "email",
+    "api",
     "transactional",
     "nigeria",
     "africa",
+    "smtp",
     "sdk"
   ],
+  "author": "Avianise <hello@quolle.com>",
   "license": "MIT",
+  "homepage": "https://quolle.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quolle-main/SDK.git"
+  },
+  "bugs": "https://github.com/Quolle-main/SDK/issues",
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "typescript": "^5.0.0"
   }
