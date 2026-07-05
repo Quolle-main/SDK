@@ -131,7 +131,7 @@ try {
 
 ## API Reference
 
-Full documentation at https://docs.quolle.com
+Full documentation at https://quolle.com/docs
 
 ## License
 
