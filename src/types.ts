@@ -4,18 +4,22 @@ export interface QuolleConfig {
   timeout?: number;
 }
 
-export interface SendEmailPayload {
+interface SendEmailBase {
   from: string;
   to: string | string[];
   subject: string;
-  html: string;
-  text?: string;
   replyTo?: string;
   scheduledAt?: string;
   metadata?: Record<string, unknown>;
 }
 
-export interface USSDEmailPayload extends SendEmailPayload {
+export type SendEmailPayload = SendEmailBase &
+  (
+    | { html: string; text?: string; template?: never; variables?: never }
+    | { template: string; variables?: Record<string, unknown>; html?: never; text?: never }
+  );
+
+export type USSDEmailPayload = SendEmailPayload & {
   metadata: {
     ussd: {
       sessionId: string;
@@ -25,7 +29,7 @@ export interface USSDEmailPayload extends SendEmailPayload {
     };
     [key: string]: unknown;
   };
-}
+};
 
 export interface Email {
   id: string;
@@ -40,38 +44,6 @@ export interface Email {
   openedAt?: string;
   clickedAt?: string;
   sentAt?: string;
-  createdAt: string;
-}
-
-export interface Domain {
-  id: string;
-  domain: string;
-  status: "pending" | "verified" | "failed";
-  dnsProvider?: string;
-  createdAt: string;
-}
-
-export interface DNSRecord {
-  type: string;
-  name: string;
-  value: string;
-  ttl: number;
-  purpose: string;
-}
-
-export interface Contact {
-  id: string;
-  email: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  phone?: string | null;
-  unsubscribed: boolean;
-  createdAt: string;
-}
-
-export interface ContactList {
-  id: string;
-  name: string;
   createdAt: string;
 }
 
@@ -93,5 +65,9 @@ export class QuolleError extends Error {
   ) {
     super(message);
     this.name = "QuolleError";
+  }
+
+  get status(): number {
+    return this.statusCode;
   }
 }

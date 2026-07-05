@@ -5,9 +5,5 @@ export type {
   SendEmailPayload,
   USSDEmailPayload,
   Email,
-  Domain,
-  DNSRecord,
-  Contact,
-  ContactList,
   WebhookEvent,
 } from "./types";

@@ -1,6 +1,6 @@
 {
   "name": "@quolle/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official Node.js SDK for Quolle — transactional email API for African SaaS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
     "smtp",
     "sdk"
   ],
-  "author": "Avianise <hello@quolle.com>",
+  "author": "Quolle <hello@quolle.com>",
   "license": "MIT",
   "homepage": "https://quolle.com",
   "repository": {

@@ -1,7 +1,5 @@
 import { QuolleError, type QuolleConfig } from "./types";
 import { EmailsResource } from "./emails";
-import { DomainsResource } from "./domains";
-import { ContactsResource } from "./contacts";
 
 export class Quolle {
   private readonly apiKey: string;
@@ -10,8 +8,6 @@ export class Quolle {
   private _idempotencyKey?: string;
 
   readonly emails: EmailsResource;
-  readonly domains: DomainsResource;
-  readonly contacts: ContactsResource;
 
   constructor(config: QuolleConfig) {
     if (!config.apiKey) throw new Error("Quolle API key is required");
@@ -22,8 +18,6 @@ export class Quolle {
     this.baseURL = config.baseURL ?? "https://api.quolle.com";
     this.timeout = config.timeout ?? 30000;
     this.emails = new EmailsResource(this);
-    this.domains = new DomainsResource(this);
-    this.contacts = new ContactsResource(this);
   }
 
   setIdempotencyKey(key: string): this {

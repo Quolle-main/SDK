@@ -30,9 +30,9 @@ const { id } = await quolle.emails.send({
 
 - ✅ TypeScript-first with full type safety
 - ✅ Send via REST API
+- ✅ Template-based sending with variables
 - ✅ USSD-triggered emails
 - ✅ Idempotency key support
-- ✅ Domain management
 - ✅ Naira pricing at quolle.com
 
 ## Idempotency
@@ -69,6 +69,21 @@ const { ids, queued } = await quolle.emails.sendBatch([
 ])
 ```
 
+## Template Sending
+
+```typescript
+const { id } = await quolle.emails.send({
+  from: "hello@mail.yourdomain.com",
+  to: "customer@example.com",
+  subject: "Welcome!",
+  template: "welcome-email",
+  variables: {
+    firstName: "Amaka",
+    activationLink: "https://yourapp.com/activate/abc123"
+  }
+})
+```
+
 ## USSD Emails
 
 ```typescript
@@ -87,26 +102,12 @@ await quolle.emails.sendUSSD({
 })
 ```
 
-## Domains
+## Fetching and Cancelling Emails
 
 ```typescript
-const domains = await quolle.domains.list()
+const email = await quolle.emails.get("a1b2c3d4-...")
 
-const { domain, dnsRecords } = await quolle.domains.add("mail.yourdomain.com")
-
-const { verified, status } = await quolle.domains.verify(domain.id)
-```
-
-## Contact Lists
-
-```typescript
-const list = await quolle.contacts.createList("Newsletter")
-await quolle.contacts.add(list.id, {
-  email: "user@example.com",
-  firstName: "Amaka",
-  phone: "+2348012345678"
-})
-const contacts = await quolle.contacts.list(list.id)
+await quolle.emails.cancel("a1b2c3d4-...")
 ```
 
 ## Error Handling
@@ -123,7 +124,7 @@ try {
   })
 } catch (err) {
   if (err instanceof QuolleError) {
-    console.error(err.statusCode, err.message)
+    console.error(err.status, err.message)
   }
 }
 ```
@@ -134,4 +135,4 @@ Full documentation at https://docs.quolle.com
 
 ## License
 
-MIT © Avianise
+MIT © Quolle
